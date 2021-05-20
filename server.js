@@ -7,8 +7,8 @@ http.createServer((request, response) => {
     q = url.parse(addr, true),
     filePath = '';
 
-  fs.appendFile('log.txt', 'URL: ' + addr + '\nTimestamp: ' + new Date() + '\n\n', (err) => { //adds requests to a log that is viewable by the developer
-    if (err) {
+  fs.appendFile('log.txt', 'URL: ' + addr + '\nTimestamp: ' + new Date() + '\n\n', (err) => {
+    if (err){
       console.log(err);
     } else {
       console.log('Added to log.');
@@ -18,9 +18,20 @@ http.createServer((request, response) => {
   if (q.pathname.includes('documentation')) {
     filePath = (__dirname + '/documentation.html');
   } else {
-      filePath = 'index.html'; // if the requested URL doesn't exist, this returns user to homepage
+      filePath = 'index.html';
   }
-  
+
+  fs.readFile(filePath, (err, data) => { //locates and reads file from filePath
+    if (err) {
+      throw err;
+  }
+
+  response.writeHead(200, { 'Content-Type': 'text/html' });
+  response.write(data);
+  response.end();
+
+  });
+
 }).listen(8080);
 
 console.log('My first Node test server is running on Port 8080.');
