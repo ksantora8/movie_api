@@ -70,11 +70,6 @@ let movies = [
   }
 ]
 
-app.get('/documenation.html', (req, res) => {
-  res.sendFile('public/documentation.html', { root: __dirname
-  });
-});
-
 app.get('/', (req, res) => {
   res.send('Welcome to myFlix!');
 });
@@ -126,6 +121,11 @@ app.delete('/users/:username', (req, res) => {
 });
 
 app.use(express.static('/public'));
+
+app.get('/documenation', (req, res) => {
+  res.sendFile('public/documentation.html', { root: __dirname
+  });
+});
 
 //error handling
 app.use((err, req, res, next) => {
