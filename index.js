@@ -6,11 +6,7 @@ const express = require('express'),
 
 app.use(morgan('common'));
 app.use(bodyParser.json());
-app.use(express.static('/public'));
-//app.use((err, req, res, next) => {
-//  console.error(err.stack);
-  //res.status(500).send('Something broke!');
-//});
+
 let movies = [
   {
     title: 'Us',
@@ -74,19 +70,68 @@ let movies = [
   }
 ]
 
-
-app.get('/', (req, res) => {
-  res.send('Welcome to my app!');
-});
-
-app.get('/movies',(req,res) => {
-  res.json(movies);
-});
-
 app.get('/documenation.html', (req, res) => {
   res.sendFile('public/documentation.html', { root: __dirname
   });
 });
+
+app.get('/', (req, res) => {
+  res.send('Welcome to myFlix!');
+});
+
+//requests full list of movies
+app.get('/movies',(req,res) => {
+  res.json(movies);
+});
+
+//requests information about specifc movie by title
+app.get('/movies/:title',(req,res) => {
+  res.json(movies.find( (movie) =>
+    { return movie.title === req.params.title }));
+});
+
+//requests information about a specific director
+app.get('/movies/directors/:name', (req,res) => {
+  res.send('Information about specfic director');
+});
+
+//requests genre information
+app.get('/movies/genres/:genre', (req,res) => {
+  res.send('Information about specific genre');
+});
+
+//allows registration
+app.post('/users', (req, res) => {
+  res.send('Registration successful!')
+});
+
+//update username
+app.put('/users/:username', (req, res) => {
+  res.send(req.params.username + ', Your profile has been updated!');
+});
+
+//add titles to favorites
+app.post('/users/:username/favorites', (req, res) => {
+  res.send(req.params.title + ' added to your favorites!');
+});
+
+//delete titles from favorites
+app.delete('/users/:username/favorites/:title', (req, res) => {
+  res.send('You removed ' + req.params.title + ' from your favorites.');
+});
+
+//delete profile
+app.delete('/users/:username', (req, res) => {
+  res.send('You successfully deleted your profile');
+});
+
+app.use(express.static('/public'));
+
+//error handling
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke! try again!!');
+  });
 
 app.listen(8080, () => {
   console.log('Your app is listening on port 8080.');

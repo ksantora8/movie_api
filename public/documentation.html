@@ -11,5 +11,80 @@
     <p> New users will be able to create an account so they can save and remove movies from a list of their favorites. </p>
     <p> Existing users will be able to update their account information or deregister as needed. </p>
     <p> This API will be created using a MERN stack.</p>
+
+		<table>
+			<tbody>
+				<tr>
+					<th>Request</th>
+					<th>URL</th>
+					<th>HTTP Method</th>
+	        <th>Request body data format</th>
+	        <th>Response body data format</th>
+				</tr>
+				<tr>
+					<td>Return list of all movies</td>
+					<td>/movies</td>
+					<td>GET</td>
+					<td>None</td>
+					<td>JSON object holding data for all movies</td>
+				</tr>
+				<tr>
+					<td>Return data about a single movie by title</td>
+					<td>/movies/:title</td>
+					<td>GET</td>
+					<td>None</td>
+					<td>JSON object holding data about single movie</td>
+				</tr>
+				<tr>
+					<td>Return data about genre</td>
+					<td>/movies/genres/:genre</td>
+					<td>GET</td>
+					<td>None</td>
+					<td>JSON object holding data about genre</td>
+				</tr>
+				<tr>
+					<td>Return data about director</td>
+					<td>/movies/director/:name</td>
+					<td>GET</td>
+					<td>None</td>
+					<td>JSON object holding data about director</td>
+				</tr>
+				<tr>
+					<td>Register new users</td>
+					<td>/users</td>
+					<td>POST</td>
+					<td>JSON object holding data about the user to register</td>
+					<td>JSON object holding data about the user to register</td>
+				</tr>
+				<tr>
+					<td>Allow existing users to change personal information</td>
+					<td>/users/:username</td>
+					<td>PUT</td>
+					<td>Nones</td>
+					<td>Text message saying the change was successful</td>
+				</tr>
+				<tr>
+					<td>Allow users to add titles to their favorites</td>
+					<td>/users/:username/favorites</td>
+					<td>POST</td>
+					<td>JSON Object holding data about the movie to added to the favorites</td>
+					<td>JSON Object holding data about the movie to added to the favorites</td>
+				</tr>
+				<tr>
+					<td>Allow users to remove titles from their favorites</td>
+					<td>/users/:username/favorites/:title</td>
+					<td>DELETE</td>
+					<td>None</td>
+					<td>Text message saying favorite was successfully delted</td>
+				</tr>
+				<tr>
+					<td>Unregister existing users</td>
+					<td>/users/:username</td>
+					<td>DELETE</td>
+					<td>None</td>
+					<td>Text message saying the users account was successfully deleted</td>
+				</tr>
+				</tbody>
+		</table>
   </body>
 </html>
