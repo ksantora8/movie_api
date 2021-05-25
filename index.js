@@ -120,12 +120,12 @@ app.delete('/users/:username', (req, res) => {
   res.send('You successfully deleted your profile');
 });
 
-app.use(express.static('/public'));
-
-app.get('/documenation', (req, res) => {
+app.get('/documenation.html', (req, res) => {
   res.sendFile('public/documentation.html', { root: __dirname
   });
 });
+
+app.use(express.static('/public'));
 
 //error handling
 app.use((err, req, res, next) => {
