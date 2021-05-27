@@ -37,14 +37,14 @@
 				</tr>
 				<tr>
 					<td>Return data about genre</td>
-					<td>/movies/genres/:genre</td>
+					<td>/movies/:genre</td>
 					<td>GET</td>
 					<td>None</td>
 					<td>JSON object holding data about genre</td>
 				</tr>
 				<tr>
 					<td>Return data about director</td>
-					<td>/movies/director/:name</td>
+					<td>/movies/:director</td>
 					<td>GET</td>
 					<td>None</td>
 					<td>JSON object holding data about director</td>
@@ -58,28 +58,28 @@
 				</tr>
 				<tr>
 					<td>Allow existing users to change personal information</td>
-					<td>/users/:username</td>
+					<td>/users/:name</td>
 					<td>PUT</td>
 					<td>Nones</td>
 					<td>Text message saying the change was successful</td>
 				</tr>
 				<tr>
 					<td>Allow users to add titles to their favorites</td>
-					<td>/users/:username/favorites</td>
+					<td>/users/:name/favorites</td>
 					<td>POST</td>
 					<td>JSON Object holding data about the movie to added to the favorites</td>
 					<td>JSON Object holding data about the movie to added to the favorites</td>
 				</tr>
 				<tr>
 					<td>Allow users to remove titles from their favorites</td>
-					<td>/users/:username/favorites/:title</td>
+					<td>/users/:name/favorites/:title</td>
 					<td>DELETE</td>
 					<td>None</td>
 					<td>Text message saying favorite was successfully delted</td>
 				</tr>
 				<tr>
 					<td>Unregister existing users</td>
-					<td>/users/:username</td>
+					<td>/users/:name</td>
 					<td>DELETE</td>
 					<td>None</td>
 					<td>Text message saying the users account was successfully deleted</td>

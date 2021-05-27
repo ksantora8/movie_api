@@ -2,73 +2,17 @@ const express = require('express'),
       morgan = require ('morgan'),
       uuid = require ('uuid'),
       bodyParser = require ('body-parser'),
-      app = express();
+      mongoose = require('mongoose'),
+      Models = require('./models.js');
+
+const app = express(),
+      Movies = Models.Movie,
+      Users = Models.User;
+
+mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.use(morgan('common'));
 app.use(bodyParser.json());
-
-let movies = [
-  {
-    title: 'Us',
-    year: 2019,
-    director: 'Jordan Peele',
-    genres:['horror','thriller']
-  },
-  {
-    title: 'Get Out',
-    year: 2017,
-    director: 'Jordan Peele',
-    genres:['horror','thriller']
-  },
-  {
-    title: 'A Quiet Place',
-    year: 2018,
-    director: 'John Krazinski',
-    genres:['horror','thriller']
-  },
-  {
-    title: 'The Cabinet of Doctor Calgari',
-    year: 1921,
-    director: 'Robert Wiene',
-    genres:['horror']
-  },
-  {
-    title: 'Nosferatu',
-    year: 1922,
-    director: 'F.W. Murnau',
-    genres:['horror']
-  },
-  {
-    title:'King Kong',
-    year: 1933,
-    director: ['Merian C. Cooper', 'Ernest B. Schoedsack'],
-    genres:['adventure', 'fantasy']
-  },
-  {
-    title: 'Psycho',
-    year: 1960,
-    director: 'Alfred Hitchcock',
-    genres:['horror', 'thriller']
-  },
-  {
-    title:'The Invisible Man',
-    year: 2020,
-    director: 'Leigh Whannell',
-    genres:['horror', 'thriller']
-  },
-  {
-    title:'The Bride of Frankenstein',
-    year: 1935,
-    director: 'James Whale',
-    genres:['horror']
-  },
-  {
-    title: 'The Babadook',
-    year: 2014,
-    director: 'Jennifer Kent',
-    genres:['horror','thriller']
-  }
-]
 
 app.get('/', (req, res) => {
   res.send('Welcome to myFlix!');
@@ -95,9 +39,64 @@ app.get('/movies/genres/:genre', (req,res) => {
   res.send('Information about specific genre');
 });
 
+// Get all users
+app.get('/users', (req, res) => {
+  Users.find()
+    .then((users) => {
+      res.status(201).json(users);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
+// Get a user by username
+app.get('/users/:Username', (req, res) => {
+  Users.findOne({ Username: req.params.Username })
+    .then((user) => {
+      res.json(user);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
 //allows registration
+//Add a user
+/* We’ll expect JSON in this format
+{
+  ID: Integer,
+  Username: String,
+  Password: String,
+  Email: String,
+  Birthday: Date
+}*/
 app.post('/users', (req, res) => {
-  res.send('Registration successful!')
+  Users.findOne({ Username: req.body.Username })
+    .then((user) => {
+      if (user) {
+        return res.status(400).send(req.body.Username + 'already exists');
+      } else {
+        Users
+          .create({
+            Username: req.body.Username,
+            Password: req.body.Password,
+            Email: req.body.Email,
+            Birthday: req.body.Birthday
+          })
+          .then((user) =>{res.status(201).json(user) })
+        .catch((error) => {
+          console.error(error);
+          res.status(500).send('Error: ' + error);
+        })
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send('Error: ' + error);
+    });
 });
 
 //update username
