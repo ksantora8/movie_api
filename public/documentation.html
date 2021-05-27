@@ -36,18 +36,32 @@
 					<td>JSON object holding data about single movie</td>
 				</tr>
 				<tr>
-					<td>Return data about genre</td>
-					<td>/movies/:genre</td>
+					<td>Return data about a genre</td>
+					<td>/movies/Genre/:name</td>
 					<td>GET</td>
 					<td>None</td>
 					<td>JSON object holding data about genre</td>
 				</tr>
 				<tr>
-					<td>Return data about director</td>
-					<td>/movies/:director</td>
+					<td>Return data about a director</td>
+					<td>/movies/Director/:name</td>
 					<td>GET</td>
 					<td>None</td>
 					<td>JSON object holding data about director</td>
+				</tr>
+				<tr>
+					<td>Get all users</td>
+					<td>/users</td>
+					<td>GET</td>
+					<td>None</td>
+					<td>JSON object holding data about users</td>
+				</tr>
+				<tr>
+					<td>Get user by name</td>
+					<td>/users/:name</td>
+					<td>GET</td>
+					<td>None</td>
+					<td>JSON object holding data about the user</td>
 				</tr>
 				<tr>
 					<td>Register new users</td>
@@ -61,28 +75,28 @@
 					<td>/users/:name</td>
 					<td>PUT</td>
 					<td>Nones</td>
-					<td>Text message saying the change was successful</td>
+					<td>JSON object holding data about the user with updated info</td>
 				</tr>
 				<tr>
 					<td>Allow users to add titles to their favorites</td>
-					<td>/users/:name/favorites</td>
+					<td>/users/:name/movies/:_id</td>
 					<td>POST</td>
-					<td>JSON Object holding data about the movie to added to the favorites</td>
-					<td>JSON Object holding data about the movie to added to the favorites</td>
+					<td>None</td>
+					<td>JSON Object holding data about the user with movie id added to favorites</td>
 				</tr>
 				<tr>
 					<td>Allow users to remove titles from their favorites</td>
-					<td>/users/:name/favorites/:title</td>
+					<td>/users/:name/movies/:_id</td>
 					<td>DELETE</td>
 					<td>None</td>
-					<td>Text message saying favorite was successfully delted</td>
+					<td>JSON Object holding data about the user with movie id removed from favorites</td>
 				</tr>
 				<tr>
 					<td>Unregister existing users</td>
 					<td>/users/:name</td>
 					<td>DELETE</td>
 					<td>None</td>
-					<td>Text message saying the users account was successfully deleted</td>
+					<td>Text message saying the users account was deleted</td>
 				</tr>
 				</tbody>
 		</table>
