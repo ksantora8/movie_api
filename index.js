@@ -1,9 +1,12 @@
 const express = require('express'),
       morgan = require ('morgan'),
-      uuid = require ('uuid'),
+      //uuid = require ('uuid'),
       bodyParser = require ('body-parser'),
       mongoose = require('mongoose'),
-      Models = require('./models.js');
+      Models = require('./models.js'),
+      passport = require ('passport');
+
+require('./passport');
 
 const app = express(),
       Movies = Models.Movie,
@@ -15,7 +18,7 @@ mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connectionasdf error:'));
 db.once('open', function() {
-  console.log("Successfully connected to MongoDB!");
+  console.log('Successfully connected to MongoDB!');
 });
 
 
@@ -24,13 +27,16 @@ app.use(bodyParser.json());
 app.use(express.static('/public'));
 
 
+let auth = require('./auth')(app);
+
+
 app.get('/', (req, res) => {
   res.send('Welcome to myFlix!');
 });
 
 
 //get all movies
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.find()
     .then((movies) => {
       res.status(201).json(movies);
