@@ -8,9 +8,15 @@ const express = require('express'),
 
 require('./passport');
 
+
 const app = express(),
       Movies = Models.Movie,
       Users = Models.User;
+
+app.use(morgan('common'));
+app.use(bodyParser.json());
+app.use(express.static('/public'));
+let auth = require('./auth')(app);
 
 mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -22,12 +28,12 @@ db.once('open', function() {
 });
 
 
-app.use(morgan('common'));
-app.use(bodyParser.json());
-app.use(express.static('/public'));
+//app.use(morgan('common'));
+//app.use(bodyParser.json());
+//app.use(express.static('/public'));
 
 
-let auth = require('./auth')(app);
+//let auth = require('./auth')(app);
 
 
 app.get('/', (req, res) => {
