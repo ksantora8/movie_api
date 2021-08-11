@@ -4,19 +4,21 @@ const express = require('express'),
       bodyParser = require ('body-parser'),
       mongoose = require('mongoose'),
       Models = require('./models.js'),
-      passport = require ('passport');
+      passport = require ('passport'),
+      cors = require ('cors');
 
 require('./passport');
-
 
 const app = express(),
       Movies = Models.Movie,
       Users = Models.User;
 
+app.use(cors());
 app.use(morgan('common'));
 app.use(bodyParser.json());
 app.use(express.static('/public'));
 let auth = require('./auth')(app);
+
 
 mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -118,7 +120,8 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (r
   password: String,
   birthday: Date
 }*/
-app.post('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.post('/users', (req, res) => {
+  let hashedPassword = Users.hashPassword(req.body.Password);
   Users.findOne({ Username: req.body.Username })
     .then((user) => {
       if (user) {
@@ -128,7 +131,7 @@ app.post('/users', passport.authenticate('jwt', { session: false }), (req, res) 
           .create({
             Username: req.body.Username,
             Email: req.body.Email,
-            Password: req.body.Password,
+            Password: hashedPassword,
             Birthday: req.body.Birthday
           })
           .then((user) =>{res.status(201).json(user) })
@@ -161,7 +164,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (r
     {
       Username: req.body.Username,
       Email: req.body.Email,
-      Password: req.body.Password,
+      Password: hashedPassword,
       Birthday: req.body.Birthday
     }
   },
@@ -226,7 +229,7 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
 });
 
 
-app.get("/documentation" , passport.authenticate('jwt', { session: false }), (req,res) =>{
+app.get("/documentation" , (req,res) =>{
     res.sendFile("public/documentation.html",{root:__dirname});
 });
 
