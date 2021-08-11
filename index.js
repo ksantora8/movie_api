@@ -1,6 +1,6 @@
 const express = require('express'),
       morgan = require ('morgan'),
-      //uuid = require ('uuid'),
+      uuid = require ('uuid'),
       bodyParser = require ('body-parser'),
       mongoose = require('mongoose'),
       Models = require('./models.js'),
@@ -106,8 +106,8 @@ app.get('/users', (req, res) => {
 });
 
 // Get a user by username
-app.get('/users/:name', (req, res) => {
-  Users.findOne({ name: req.params.name })
+app.get('/users/:Username', (req, res) => {
+  Users.findOne({ Username: req.params.Username })
    .then((user) => {
       res.json(user);
     })
@@ -128,17 +128,17 @@ app.get('/users/:name', (req, res) => {
   birthday: Date
 }*/
 app.post('/users', (req, res) => {
-  Users.findOne({ name: req.body.name })
+  Users.findOne({ Username: req.body.Username })
     .then((user) => {
       if (user) {
-        return res.status(400).send(req.body.name + 'already exists');
+        return res.status(400).send(req.body.Username + 'already exists');
       } else {
         Users
           .create({
-            name: req.body.name,
-            email: req.body.email,
-            password: req.body.password,
-            birthday: req.body.birthday
+            Username: req.body.Username,
+            Email: req.body.Email,
+            Password: req.body.Password,
+            Birthday: req.body.Birthday
           })
           .then((user) =>{res.status(201).json(user) })
         .catch((error) => {
@@ -165,13 +165,13 @@ app.post('/users', (req, res) => {
   (required)
   birthday: Date
 }*/
-app.put('/users/:name', (req, res) => {
-  Users.findOneAndUpdate({ name: req.params.name }, { $set:
+app.put('/users/:Username', (req, res) => {
+  Users.findOneAndUpdate({ Username: req.params.Username }, { $set:
     {
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password,
-      birthday: req.body.birthday
+      Username: req.body.Username,
+      Email: req.body.Email,
+      Password: req.body.Password,
+      Birthday: req.body.Birthday
     }
   },
   { new: true }, // This line makes sure that the updated document is returned
@@ -186,8 +186,8 @@ app.put('/users/:name', (req, res) => {
 });
 
 // Add a movie to a user's list of favorites
-app.post('/users/:name/movies/:_id', (req, res) => {
-  Users.findOneAndUpdate({ name: req.params.name }, {
+app.post('/users/:Username/movies/:_id', (req, res) => {
+  Users.findOneAndUpdate({ Username: req.params.Username }, {
      $push: { favorites: req.params._id }
    },
    { new: true }, // This line makes sure that the updated document is returned
@@ -204,8 +204,8 @@ app.post('/users/:name/movies/:_id', (req, res) => {
 
 //delete titles from favorites
 //Remove a movie from a user's list of favorites
-app.delete('/users/:name/movies/:_id', (req, res) => {
-	Users.findOneAndUpdate({name: req.params.name},
+app.delete('/users/:Username/movies/:_id', (req, res) => {
+	Users.findOneAndUpdate({Username: req.params.Username},
     { $pull: { favorites: req.params._id} },
     {new: true},
     (err, updatedUser) => {
@@ -219,13 +219,13 @@ app.delete('/users/:name/movies/:_id', (req, res) => {
 });
 
 // Delete by username
-app.delete('/users/:name', (req, res) => {
-  Users.findOneAndRemove({ name: req.params.name })
+app.delete('/users/:Username', (req, res) => {
+  Users.findOneAndRemove({ Username: req.params.Username })
     .then((user) => {
       if (!user) {
-        res.status(400).send(req.params.name + ' was not found');
+        res.status(400).send(req.params.Username + ' was not found');
       } else {
-        res.status(200).send(req.params.name + ' was deleted.');
+        res.status(200).send(req.params.Username + ' was deleted.');
       }
     })
     .catch((err) => {
