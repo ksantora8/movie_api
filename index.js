@@ -5,7 +5,8 @@ const express = require('express'),
       mongoose = require('mongoose'),
       Models = require('./models.js'),
       passport = require ('passport'),
-      cors = require ('cors');
+      cors = require ('cors'),
+      {check, validationResult} = require ('express-validator');
 
 require('./passport');
 
@@ -35,7 +36,7 @@ app.get('/', (req, res) => {
 
 
 //get all movies
-app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies', (req, res) => {
   Movies.find()
     .then((movies) => {
       res.status(201).json(movies);
@@ -48,7 +49,7 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
 
 
 // Get a movie by title
-app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies/:Title', (req, res) => {
   Movies.findOne({ title: req.params.title })
    .then((movie) => {
       res.json(movie);
@@ -61,7 +62,7 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req
 
 
 //get information on a specific director
-app.get('/movies/director/:name', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies/director/:name', (req, res) => {
 	Movies.findOne({'Director.name': req.params.name})
 	.then((movie) => {
 		res.json(movie.Director);
@@ -74,7 +75,7 @@ app.get('/movies/director/:name', passport.authenticate('jwt', { session: false 
 
 
 //get information on a genre
-app.get('/movies/genre/:name', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies/genre/:name', (req, res) => {
 	Movies.findOne({'Genre.name': req.params.name})
 	.then((movie) => {
 		res.json(movie.Genre);
@@ -120,7 +121,19 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (r
   password: String,
   birthday: Date
 }*/
-app.post('/users', (req, res) => {
+app.post('/users',
+  [
+  check('Username', 'Username is required').isLength({min:4}),
+  check('Username', 'Username must be alphanumeric').isAlphanumeric(),
+  check('Password', 'Password is required').not().isEmpty(),
+  check('Email', 'Email is invalid').isEmail()], (req,res) => {
+
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()){
+      return res.status(422).json({errors: errors.array()});
+    }
+
   let hashedPassword = Users.hashPassword(req.body.Password);
   Users.findOne({ Username: req.body.Username })
     .then((user) => {
@@ -240,6 +253,7 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke! try again!!');
 });
 
-app.listen(8080, () => {
-  console.log('Your app is listening on port 8080.');
+const port = process.env.PORT || 8080;
+app.listen(port, "0.0.0.0", () => {
+  console.log("Listening on port " + port);
 });
